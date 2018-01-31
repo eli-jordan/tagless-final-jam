@@ -1,0 +1,1 @@
+addSbtPlugin("de.heikoseeberger" % "sbt-groll" % "6.1.0")
