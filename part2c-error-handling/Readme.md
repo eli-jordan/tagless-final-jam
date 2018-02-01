@@ -8,7 +8,7 @@ be a monad with error handling capabilities. This allows us to use `raiseError`
 
 ## Read The Code
 
-`Throwing` is a type alias defined in [service.scala](./src/main/scala/service.scala) for `MonadError[F[_], Throwable]` allowing it to be 
+`Throwing` is a type alias defined in [service.scala](./src/main/scala/part2c/service.scala) for `MonadError[F[_], Throwable]` allowing it to be 
 used as a context bound. This is placing a constraint on our effect type, indicating that it must have a Monad instance that supports
 error handling.
 
@@ -21,6 +21,6 @@ interpreters. We require a type that has a `MonadError` instance, and `Try` is a
 
 ## Exercise
 
-- Raise a `NoSuchUserException` in `getReadingList` when there is no user for the specified `UserId`.
+- Raise a `NoSuchUserException` in `ReadingListServiceCompiler.getReadingList` when there is no user for the specified `UserId`.
 
-- Run `ReadingListServiceCompilerSpec` to test your implementation
+- Run `sbt part2c-error-handling/test` to test your implementation

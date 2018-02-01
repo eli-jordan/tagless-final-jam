@@ -1,6 +1,7 @@
+package part2c
+
 import cats.implicits._
-import domain._
-import service.Throwing
+import part2c.domain._
 
 import scala.language.higherKinds
 

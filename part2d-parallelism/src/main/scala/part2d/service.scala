@@ -2,7 +2,7 @@ import cats.{MonadError, Parallel}
 
 import scala.language.higherKinds
 
-package object service {
+package object part2d {
 
     /**
      * Type alias for MonadError with the error type fixed to Throwable, allowing

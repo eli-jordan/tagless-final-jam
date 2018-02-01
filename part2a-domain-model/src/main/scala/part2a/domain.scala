@@ -1,3 +1,5 @@
+package part2a
+
 import scala.language.higherKinds
 
 /**

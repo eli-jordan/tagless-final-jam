@@ -1,8 +1,9 @@
-import cats.Id
+package part2c
+
 import cats.implicits._
-import domain._
-import interpreters._
 import org.scalatest.{MustMatchers, WordSpec}
+import part2c.domain._
+import part2c.interpreters._
 
 import scala.util.Failure
 

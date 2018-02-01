@@ -1,8 +1,10 @@
+package part2e
+
 import cats.Parallel
 import cats.implicits._
 import org.scalatest.{MustMatchers, WordSpec}
-import domain._
-import interpreters.{NoSuchUserException, ReadingListServiceCompiler}
+import part2e.domain._
+import part2e.interpreters.{NoSuchUserException, ReadingListServiceCompiler}
 
 import scala.util.{Failure, Try}
 

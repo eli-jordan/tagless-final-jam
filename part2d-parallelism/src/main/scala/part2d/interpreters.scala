@@ -1,7 +1,7 @@
+package part2d
+
 import cats.implicits._
-import cats._
-import domain._
-import service.{ParallelId, Throwing}
+import part2d.domain._
 
 import scala.language.higherKinds
 

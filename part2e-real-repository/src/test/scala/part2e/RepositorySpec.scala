@@ -1,9 +1,15 @@
+package part2e
+
 
 import cats.implicits._
-import domain._
 import org.scalatest.{MustMatchers, WordSpec}
+import part2e.domain._
 
 import scala.util.Try
+
+// Exercise -
+// 1. Implement InMemoryBookRepository
+// 2. Implement a test that adds a book, then lists the books, and asserts the added book is listed.
 
 class InMemoryUserRepository extends UserRepository[Try] {
     private var users = Map.empty[UserId, User]

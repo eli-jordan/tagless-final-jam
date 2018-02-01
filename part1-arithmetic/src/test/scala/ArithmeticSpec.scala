@@ -20,4 +20,14 @@ class ArithmeticSpec extends WordSpec with MustMatchers {
             value mustBe 5
         }
     }
+
+    "Equivalence" should {
+        "Initial -> Final" in {
+
+        }
+
+        "Final -> Initial" in {
+
+        }
+    }
 }

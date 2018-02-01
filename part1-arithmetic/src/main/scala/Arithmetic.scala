@@ -80,11 +80,11 @@ object Arithmetic {
     /**
      * The evaluator function for 'IExp' that is implemented in terms of 'FExp'
      */
-    def finalize[A](exp: IExp, c: FExp[A]): A = exp match {
+    def toFinal[A](exp: IExp, c: FExp[A]): A = exp match {
         case Lit(v) => c.lit(v)
-        case Add(lhs, rhs) => c.add(finalize(lhs, c), finalize(rhs, c))
-        case Sub(lhs, rhs) => c.sub(finalize(lhs, c), finalize(rhs, c))
-        case Mul(lhs, rhs) => c.mul(finalize(lhs, c), finalize(rhs, c))
+        case Add(lhs, rhs) => c.add(toFinal(lhs, c), toFinal(rhs, c))
+        case Sub(lhs, rhs) => c.sub(toFinal(lhs, c), toFinal(rhs, c))
+        case Mul(lhs, rhs) => c.mul(toFinal(lhs, c), toFinal(rhs, c))
     }
 
     /**

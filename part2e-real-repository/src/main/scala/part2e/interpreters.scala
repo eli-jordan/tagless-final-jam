@@ -1,10 +1,11 @@
+package part2e
+
 import java.nio.file.{Files, Path, Paths}
 
 import cats.effect.Sync
 import cats.implicits._
-import domain._
-import serialization.Codec
-import service.{ParallelId, Throwing}
+import part2e.domain._
+import part2e.serialization.Codec
 
 import scala.io.Source
 import scala.language.higherKinds

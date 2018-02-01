@@ -1,3 +1,5 @@
+package part2e
+
 import cats.implicits._
 import play.api.libs.json.{Json, OFormat}
 

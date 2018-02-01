@@ -1,6 +1,8 @@
+package part2b
+
 import cats._
 import cats.implicits._
-import domain._
+import part2b.domain._
 
 import scala.language.higherKinds
 

@@ -1,8 +1,14 @@
+package part2a
+
 
 import cats._
 import cats.implicits._
-import domain._
 import org.scalatest.{MustMatchers, WordSpec}
+import part2a.domain._
+
+// Exercise -
+// 1. Implement InMemoryBookRepository
+// 2. Implement a test that adds a book, then lists the books, and asserts the added book is listed.
 
 class InMemoryUserRepository extends UserRepository[Id] {
     private var users = Map.empty[UserId, User]
@@ -18,16 +24,9 @@ class InMemoryUserRepository extends UserRepository[Id] {
 }
 
 class InMemoryBookRepository extends BookRepository[Id] {
-    private var books = Map.empty[BookId, Book]
-
-    override def listBooks(): Id[List[Book]] =
-        books.values.toList
-
-    override def getBook(id: BookId): Id[Option[Book]] =
-        books.get(id)
-
-    override def addBook(book: Book): Id[Unit] =
-        books = books + (book.id.get -> book)
+    override def listBooks(): Id[List[Book]] = ???
+    override def getBook(id: BookId): Id[Option[Book]] = ???
+    override def addBook(book: Book): Id[Unit] = ???
 }
 
 class RepositorySpec extends WordSpec with MustMatchers {
@@ -82,13 +81,8 @@ class RepositorySpec extends WordSpec with MustMatchers {
         }
 
         "added book can be listed" in {
-            val repository = new InMemoryBookRepository
-            val bookList = for {
-                _ <- repository.addBook(book)
-                books <- repository.listBooks()
-            } yield books
-
-            bookList.size mustBe 1
+            // Define this test case
+            ???
         }
     }
 }

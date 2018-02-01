@@ -1,8 +1,8 @@
-import cats.MonadError
+import cats.{MonadError, Parallel}
 
 import scala.language.higherKinds
 
-package object service {
+package object part2e {
 
     /**
      * Type alias for MonadError with the error type fixed to Throwable, allowing
@@ -16,4 +16,6 @@ package object service {
      * Summoning method for MonadError with Throwable error type
      */
     def Throwing[F[_]](implicit t: Throwing[F]): Throwing[F] = t
+
+    type ParallelId[F[_]] = Parallel[F, F]
 }

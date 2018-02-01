@@ -1,8 +1,10 @@
+package part2b
+
 import cats.Id
 import cats.implicits._
-import domain._
-import interpreters._
 import org.scalatest.{MustMatchers, WordSpec}
+import part2b.domain._
+import part2b.interpreters._
 
 class ReadingListServiceCompilerSpec extends WordSpec with MustMatchers {
 

@@ -1,7 +1,9 @@
+package part2d
+
 import cats.implicits._
-import domain._
-import interpreters._
 import org.scalatest.{MustMatchers, WordSpec}
+import part2d.domain._
+import part2d.interpreters._
 
 import scala.util.Failure
 

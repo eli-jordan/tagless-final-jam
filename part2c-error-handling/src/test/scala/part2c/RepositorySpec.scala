@@ -1,7 +1,9 @@
+package part2c
+
 
 import cats.implicits._
-import domain._
 import org.scalatest.{MustMatchers, WordSpec}
+import part2c.domain._
 
 import scala.util.Try
 
