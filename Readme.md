@@ -60,7 +60,7 @@ There are several editors for scala
 - [Part2b](./part2b-composing-algebras/Readme.md) &ndash; Composing algebras with the tagless final encoding
 - [Part2c](./part2c-error-handling) &ndash; Adding error handling
 - [Part2d](./part2d-parallelism) &ndash; Adding parallelism
-- Part2e &ndash; Not finished yet
+- [Part2e](./part2e-real-repository) &ndash; Adding a real repository implementation, using the file system.
 
 ## Answers
 
