@@ -71,5 +71,6 @@ There are solutions to each exercise in the the `/answers` subdirectory.
 - [Lecture notes](http://okmij.org/ftp/tagless-final/course/lecture.pdf) by Oleg Kiselyov that describe tagless final in detail, 
   using Haskell.
 - The [cats](https://typelevel.org/cats/) documentation
+- [Advanced Scala with Cats](https://underscore.io/training/courses/advanced-scala/) 
 - A description of the [Cats IO monad](https://typelevel.org/blog/2017/05/02/io-monad-for-cats.html) and the effect abstractions provided by `cats-effect`
 
