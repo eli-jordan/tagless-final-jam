@@ -18,8 +18,6 @@ val commonSettings = Seq(
     addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
 )
 
-lazy val part1 = (project in file("part1")).settings(commonSettings)
-
 lazy val `part1-arithmetic` =
     (project in file("part1-arithmetic")).settings(commonSettings)
 
