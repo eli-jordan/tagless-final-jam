@@ -35,10 +35,10 @@ object Arithmetic {
     * by an IExp.
     */
   def evaluate(exp: IExp): Int = exp match {
-    case Lit(v)        => ???
-    case Add(lhs, rhs) => ???
-    case Sub(lhs, rhs) => ???
-    case Mul(lhs, rhs) => ???
+    case Lit(v)        => v
+    case Add(lhs, rhs) => evaluate(lhs) + evaluate(rhs)
+    case Sub(lhs, rhs) => evaluate(lhs) - evaluate(rhs)
+    case Mul(lhs, rhs) => evaluate(lhs) * evaluate(rhs)
   }
 
   /**
@@ -73,13 +73,13 @@ object Arithmetic {
     * operations in the language, rather than a pattern match on the case classes.
     */
   object Evaluate extends FExp[Int] {
-    override def lit(value: Int): Int = ???
+    override def lit(value: Int): Int = value
 
-    override def add(lhs: Int, rhs: Int): Int = ???
+    override def add(lhs: Int, rhs: Int): Int = lhs + rhs
 
-    override def sub(lhs: Int, rhs: Int): Int = ???
+    override def sub(lhs: Int, rhs: Int): Int = lhs - rhs
 
-    override def mul(lhs: Int, rhs: Int): Int = ???
+    override def mul(lhs: Int, rhs: Int): Int = lhs * rhs
   }
 
   /**

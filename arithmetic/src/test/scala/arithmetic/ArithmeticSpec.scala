@@ -25,10 +25,12 @@ class ArithmeticSpec extends WordSpec with MustMatchers {
   "Equivalence" should {
     "Initial -> Final" in {
       // Exercise 3 - Part A
+      evaluate(initialExp) mustBe toFinal(initialExp, Evaluate)
     }
 
     "Final -> Initial" in {
       // Exercise 3 - Part B
+      finalExp(Evaluate) mustBe evaluate(finalExp(Reify))
     }
   }
 }
