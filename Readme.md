@@ -22,8 +22,7 @@ The workshop is made up of practical exercises that introduce the tagless final 
 #### Part 1
 
 The first is a practical introduction to the concept of **Tagless Final Interpreters** with a simple first order language that 
-can express integer arithmetic. Attendees will implement a simple evaluator for this language in the *tagless final* style, 
-and show that the final and initial encodings are equivalent.
+can express integer arithmetic.
 
 #### Part 2
 
@@ -41,9 +40,20 @@ The exercises will demonstrate;
 **Building**
 
 - [Java 8](https://java.com/en/download/) & [SBT](http://www.scala-sbt.org/1.0/docs/Setup.html) must be installed. 
-- Clone this repository `git clone https://github.com/eli-jordan/tagless-final-jam-2018`
+- Clone this repository `git clone https://github.com/eli-jordan/tagless-final-jam`
 - Run `sbt update` in the root of the project to download and cache all the dependencies.
 - Import the project into your favorite editor, see below for options.
+
+**Groll**
+
+This repository is configured to use [sbt-groll](https://github.com/sbt/sbt-groll) which allows the state of the repository
+to be updated as we progress through the exercises, including revealing the solutions.
+
+- To get started `sbt> groll initial`. This will get you ready for the first exercise.
+- Running `sbt> groll next` will reveal the solutions to the section
+- Running `sbt> groll next` will reveal the next exercise, and so on.
+
+Each time you move to a new exercise, there will be detailed instructions under the `/docs` directory.
 
 **Editors**
 
@@ -52,19 +62,6 @@ There are several editors for scala
 - [IntelliJ Community Edition](https://www.jetbrains.com/idea/download/) + scala plugin is a good option. 
 - You can also use [Eclipse Scala IDE](http://scala-ide.org/), or
 - [Ensime](https://github.com/ensime) 
-
-## Exercises
-
-- [Part1](./part1-arithmetic/Readme.md) &ndash; Interpreting integer arithmetic
-- [Part2a](./part2a-domain-model/Readme.md) &ndash; Defining the domain model for the reading list application
-- [Part2b](./part2b-composing-algebras/Readme.md) &ndash; Composing algebras with the tagless final encoding
-- [Part2c](./part2c-error-handling) &ndash; Adding error handling
-- [Part2d](./part2d-parallelism) &ndash; Adding parallelism
-- [Part2e](./part2e-real-repository) &ndash; Adding a real repository implementation, using the file system.
-
-## Answers
-
-There are solutions to each exercise in the the `/answers` subdirectory. 
 
 ## References
 
