@@ -2,10 +2,10 @@
 # Arithmetic Expressions 
 
 Tagless final can be thought of as an alternative way to encode the [interpreter pattern](https://en.wikipedia.org/wiki/Interpreter_pattern). The
-traditional encoding (is scala at least) is to define the set of operations in your language
+traditional encoding (in scala at least) is to define the set of operations in your language
 as an Algebraic Data Type ([ADT](https://en.wikipedia.org/wiki/Algebraic_data_type))
 
-For example, we can define a set of operation that allow a counter to be incremented or decremented.
+For example, we can define a set of operations that allow a counter to be incremented or decremented.
 
 ```scala
 sealed trait Counter
@@ -39,7 +39,7 @@ The language must support four operations;
 
 - Define the `evaulate` function, that evaluates an expression defined by `IExp`
   
-- Run the tests using `sbt part1-arithmetic/test` to verify your implementation works. <br>
+- Run the tests using `sbt arithmetic/test` to verify your implementation works. <br>
   Note: you will still have one failing test, that tests the next exercise.
 
 ## Exercise 2 &ndash; Define an evaluator for the final encoding of arithmetic expressions
