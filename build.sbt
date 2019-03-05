@@ -21,3 +21,6 @@ val commonSettings = Seq(
 
 lazy val `arithmetic` = (project in file("arithmetic"))
   .settings(commonSettings)
+
+lazy val `reading-list` = (project in file("reading-list"))
+  .settings(commonSettings)
