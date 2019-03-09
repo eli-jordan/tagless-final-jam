@@ -1,86 +1,42 @@
 package reading
 
-import cats._
-import cats.data.State
 import cats.implicits._
 import org.scalatest.{MustMatchers, WordSpec}
 import reading.domain._
+import reading.state._
 
-// Exercise -
-// 1. Implement InMemoryBookRepository or StateBookRepository
-// 2. Implement a test that adds a book, then lists the books, and asserts the added book is listed.
+import scala.util.Try
 
-class InMemoryUserRepository extends UserRepository[Id] {
+class InMemoryUserRepository extends UserRepository[Try] {
   private var users = Map.empty[UserId, User]
 
-  override def getUser(id: UserId): Id[Option[User]] =
+  override def getUser(id: UserId): Try[Option[User]] = Try {
     users.get(id)
+  }
 
-  override def addUser(user: User): Id[Unit] =
+  override def addUser(user: User): Try[Unit] = Try {
     users = users + (user.id.get -> user)
+  }
 
-  override def updateUser(user: User): Id[Unit] =
+  override def updateUser(user: User): Try[Unit] = Try {
     users = users + (user.id.get -> user)
+  }
 }
 
-object StateUserRepository {
-  type UserState     = Map[UserId, User]
-  type UserStateM[A] = State[UserState, A]
-}
-
-import reading.StateUserRepository._
-
-class StateUserRepository extends UserRepository[UserStateM] {
-
-  override def getUser(id: UserId): UserStateM[Option[User]] =
-    State.get[UserState].map(_.get(id))
-
-  override def addUser(user: User): UserStateM[Unit] =
-    State.modify[UserState] { state =>
-      state + (user.id.get -> user)
-    }
-
-  override def updateUser(user: User): UserStateM[Unit] =
-    State.modify[UserState] { state =>
-      state + (user.id.get -> user)
-    }
-}
-
-class InMemoryBookRepository extends BookRepository[Id] {
+class InMemoryBookRepository extends BookRepository[Try] {
   private var books = Map.empty[BookId, Book]
 
-  override def listBooks(): Id[List[Book]] =
+  override def listBooks(): Try[List[Book]] = Try {
     books.values.toList
+  }
 
-  override def getBook(id: BookId): Id[Option[Book]] =
+  override def getBook(id: BookId): Try[Option[Book]] = Try {
     books.get(id)
+  }
 
-  override def addBook(book: Book): Id[Unit] =
+  override def addBook(book: Book): Try[Unit] = Try {
     books = books + (book.id.get -> book)
-}
-
-object StateBookRepository {
-  type BookState     = Map[BookId, Book]
-  type BookStateM[A] = State[BookState, A]
-}
-
-import reading.StateBookRepository._
-
-class StateBookRepository extends BookRepository[BookStateM] {
-  override def listBooks(): BookStateM[List[Book]] =
-    State.get[BookState].map { state =>
-      state.values.toList
-    }
-
-  override def getBook(id: BookId): BookStateM[Option[Book]] =
-    State.get[BookState].map { state =>
-      state.get(id)
-    }
-
-  override def addBook(book: Book): BookStateM[Unit] =
-    State.modify[BookState] { state =>
-      state + (book.id.get -> book)
-    }
+  }
 }
 
 class RepositorySpec extends WordSpec with MustMatchers {
@@ -107,7 +63,7 @@ class RepositorySpec extends WordSpec with MustMatchers {
         user <- repository.getUser(user.id.get)
       } yield user
 
-      userOpt.isDefined mustBe true
+      userOpt.get.isDefined mustBe true
     }
 
     "StateUserRepository: added user can be retrieved" in {
@@ -117,32 +73,32 @@ class RepositorySpec extends WordSpec with MustMatchers {
         user <- repository.getUser(user.id.get)
       } yield user
 
-      val (_, userOpt) = stateComputation.run(Map.empty).value
+      val (_, Right(userOpt)) = stateComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
 
       userOpt mustBe defined
     }
 
     "InMemoryUserRepository: user can be updated" in {
       val repository = new InMemoryUserRepository
-      val userOpt: Id[Option[User]] = for {
+      val userOpt = for {
         _    <- repository.addUser(user)
         _    <- repository.updateUser(user.copy(firstName = "Fred"))
         user <- repository.getUser(userId)
       } yield user
 
-      userOpt mustBe defined
-      userOpt.get.firstName mustBe "Fred"
+      userOpt.get mustBe defined
+      userOpt.get.get.firstName mustBe "Fred"
     }
 
     "StateUserRepository: user can be updated" in {
       val repository = new StateUserRepository
-      val stateComputation = for {
+      val eitherTComputation = for {
         _    <- repository.addUser(user)
         _    <- repository.updateUser(user.copy(firstName = "Fred"))
         user <- repository.getUser(userId)
       } yield user
 
-      val (_, userOpt) = stateComputation.run(Map.empty).value
+      val (_, Right(userOpt)) = eitherTComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
 
       userOpt mustBe defined
       userOpt.get.firstName mustBe "Fred"
@@ -152,22 +108,22 @@ class RepositorySpec extends WordSpec with MustMatchers {
   "BookRepository" should {
     "InMemoryBookRepository: added book can be retrieved" in {
       val repository = new InMemoryBookRepository
-      val bookOpt = for {
+      val bookF = for {
         _    <- repository.addBook(book)
         book <- repository.getBook(bookId)
       } yield book
 
-      bookOpt mustBe defined
+      bookF.get mustBe defined
     }
 
     "StateBookRepository: added book can be retrieved" in {
       val repository = new StateBookRepository
-      val stateComputation = for {
+      val eitherTComputation = for {
         _    <- repository.addBook(book)
         book <- repository.getBook(bookId)
       } yield book
 
-      val (_, bookOpt) = stateComputation.run(Map.empty).value
+      val (_, Right(bookOpt)) = eitherTComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
 
       bookOpt mustBe defined
     }
@@ -184,12 +140,12 @@ class RepositorySpec extends WordSpec with MustMatchers {
 
     "StateBookRepository: added book can be listed" in {
       val repository = new StateBookRepository
-      val stateComputation = for {
+      val eitherTComputation = for {
         _     <- repository.addBook(book)
         books <- repository.listBooks()
       } yield books
 
-      val (_, bookList) = stateComputation.run(Map.empty).value
+      val (_, Right(bookList)) = eitherTComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
 
       bookList.size mustBe 1
     }
