@@ -1,6 +1,6 @@
 package reading
 
-import cats._
+import cats.Monad
 import cats.implicits._
 import reading.domain._
 
@@ -8,17 +8,13 @@ import scala.language.higherKinds
 
 object interpreters {
 
+  case class NoSuchUserException(userId: UserId) extends Exception
+
   /**
     * Here we define an implementation of the [[ReadingListService]] in terms of the [[UserRepository]] and [[BookRepository]]
     */
   class ReadingListServiceCompiler[F[_]: Monad](users: UserRepository[F], books: BookRepository[F]) extends ReadingListService[F] {
 
-    /**
-      * Exercise - Implement 'getReadingList' in terms of the operation on 'UserRepository' and 'BookRepository'
-      *
-      *  Tip: Remember that the User object has a list of 'BookId' that are the ids of the books on their reading list.
-      *  Tip: Traverse https://typelevel.org/cats/typeclasses/traverse.html
-      */
     override def getReadingList(userId: UserId): F[ReadingList] = {
       for {
         userOpt <- users.getUser(userId)
@@ -27,6 +23,8 @@ object interpreters {
             user.books.traverse(books.getBook).map { books =>
               ReadingList(user, books.flatten)
             }
+          // Exercise - raise an error
+          case None => ???
         }
       } yield list
     }
