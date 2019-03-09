@@ -23,7 +23,6 @@ class InMemoryUserRepository extends UserRepository[Id] {
     users = users + (user.id.get -> user)
 }
 
-
 object StateUserRepository {
   type UserState     = Map[UserId, User]
   type UserStateM[A] = State[UserState, A]
@@ -48,22 +47,40 @@ class StateUserRepository extends UserRepository[UserStateM] {
 }
 
 class InMemoryBookRepository extends BookRepository[Id] {
-  override def listBooks(): Id[List[Book]]           = ???
-  override def getBook(id: BookId): Id[Option[Book]] = ???
-  override def addBook(book: Book): Id[Unit]         = ???
+  private var books = Map.empty[BookId, Book]
+
+  override def listBooks(): Id[List[Book]] =
+    books.values.toList
+
+  override def getBook(id: BookId): Id[Option[Book]] =
+    books.get(id)
+
+  override def addBook(book: Book): Id[Unit] =
+    books = books + (book.id.get -> book)
 }
 
 object StateBookRepository {
-  type BookState     = Nothing // What state type should we use?
+  type BookState     = Map[BookId, Book]
   type BookStateM[A] = State[BookState, A]
 }
 
 import reading.StateBookRepository._
 
 class StateBookRepository extends BookRepository[BookStateM] {
-  override def listBooks(): BookStateM[List[Book]] = ???
-  override def getBook(id: BookId): BookStateM[Option[Book]] = ???
-  override def addBook(book: Book): BookStateM[Unit] = ???
+  override def listBooks(): BookStateM[List[Book]] =
+    State.get[BookState].map { state =>
+      state.values.toList
+    }
+
+  override def getBook(id: BookId): BookStateM[Option[Book]] =
+    State.get[BookState].map { state =>
+      state.get(id)
+    }
+
+  override def addBook(book: Book): BookStateM[Unit] =
+    State.modify[BookState] { state =>
+      state + (book.id.get -> book)
+    }
 }
 
 class RepositorySpec extends WordSpec with MustMatchers {
@@ -133,7 +150,7 @@ class RepositorySpec extends WordSpec with MustMatchers {
   }
 
   "BookRepository" should {
-    "added book can be retrieved" in {
+    "InMemoryBookRepository: added book can be retrieved" in {
       val repository = new InMemoryBookRepository
       val bookOpt = for {
         _    <- repository.addBook(book)
@@ -143,9 +160,38 @@ class RepositorySpec extends WordSpec with MustMatchers {
       bookOpt mustBe defined
     }
 
-    "added book can be listed" in {
-      // Define this test case
-      ???
+    "StateBookRepository: added book can be retrieved" in {
+      val repository = new StateBookRepository
+      val stateComputation = for {
+        _    <- repository.addBook(book)
+        book <- repository.getBook(bookId)
+      } yield book
+
+      val (_, bookOpt) = stateComputation.run(Map.empty).value
+
+      bookOpt mustBe defined
+    }
+
+    "InMemoryBookRepository: added book can be listed" in {
+      val repository = new InMemoryBookRepository
+      val bookList = for {
+        _     <- repository.addBook(book)
+        books <- repository.listBooks()
+      } yield books
+
+      bookList.size mustBe 1
+    }
+
+    "StateBookRepository: added book can be listed" in {
+      val repository = new StateBookRepository
+      val stateComputation = for {
+        _     <- repository.addBook(book)
+        books <- repository.listBooks()
+      } yield books
+
+      val (_, bookList) = stateComputation.run(Map.empty).value
+
+      bookList.size mustBe 1
     }
   }
 }
