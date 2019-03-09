@@ -19,7 +19,17 @@ object interpreters {
       *  Tip: Remember that the User object has a list of 'BookId' that are the ids of the books on their reading list.
       *  Tip: Traverse https://typelevel.org/cats/typeclasses/traverse.html
       */
-    override def getReadingList(userId: UserId): F[ReadingList] = ???
+    override def getReadingList(userId: UserId): F[ReadingList] = {
+      for {
+        userOpt <- users.getUser(userId)
+        list <- userOpt match {
+          case Some(user: User) =>
+            user.books.traverse(books.getBook).map { books =>
+              ReadingList(user, books.flatten)
+            }
+        }
+      } yield list
+    }
 
     override def addToReadingList(userId: UserId, bookId: BookId): F[Unit] = {
       for {
