@@ -13,14 +13,14 @@ object interpreters {
   /**
     * Here we define an implementation of the [[ReadingListService]] in terms of the [[UserRepository]] and [[BookRepository]]
     */
-  class ReadingListServiceCompiler[F[_]: Throwing](users: UserRepository[F], books: BookRepository[F]) extends ReadingListService[F] {
+  class ReadingListServiceCompiler[F[_]: Throwing: Par](users: UserRepository[F], books: BookRepository[F]) extends ReadingListService[F] {
 
     override def getReadingList(userId: UserId): F[ReadingList] = {
       for {
         userOpt <- users.getUser(userId)
         list <- userOpt match {
           case Some(user: User) =>
-            user.books.traverse(books.getBook).map { books =>
+            user.books.parTraverse(books.getBook).map { books =>
               ReadingList(user, books.flatten)
             }
           case None => Throwing[F].raiseError[ReadingList](NoSuchUserException(userId))
