@@ -3,7 +3,6 @@ package reading
 import cats.implicits._
 import org.scalatest.{MustMatchers, WordSpec}
 import reading.domain._
-import reading.state._
 
 import scala.util.Try
 
@@ -66,18 +65,6 @@ class RepositorySpec extends WordSpec with MustMatchers {
       userOpt.get.isDefined mustBe true
     }
 
-    "StateUserRepository: added user can be retrieved" in {
-      val repository = new StateUserRepository
-      val stateComputation = for {
-        _    <- repository.addUser(user)
-        user <- repository.getUser(user.id.get)
-      } yield user
-
-      val (_, Right(userOpt)) = stateComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
-
-      userOpt mustBe defined
-    }
-
     "InMemoryUserRepository: user can be updated" in {
       val repository = new InMemoryUserRepository
       val userOpt = for {
@@ -88,20 +75,6 @@ class RepositorySpec extends WordSpec with MustMatchers {
 
       userOpt.get mustBe defined
       userOpt.get.get.firstName mustBe "Fred"
-    }
-
-    "StateUserRepository: user can be updated" in {
-      val repository = new StateUserRepository
-      val eitherTComputation = for {
-        _    <- repository.addUser(user)
-        _    <- repository.updateUser(user.copy(firstName = "Fred"))
-        user <- repository.getUser(userId)
-      } yield user
-
-      val (_, Right(userOpt)) = eitherTComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
-
-      userOpt mustBe defined
-      userOpt.get.firstName mustBe "Fred"
     }
   }
 
@@ -116,36 +89,12 @@ class RepositorySpec extends WordSpec with MustMatchers {
       bookF.get mustBe defined
     }
 
-    "StateBookRepository: added book can be retrieved" in {
-      val repository = new StateBookRepository
-      val eitherTComputation = for {
-        _    <- repository.addBook(book)
-        book <- repository.getBook(bookId)
-      } yield book
-
-      val (_, Right(bookOpt)) = eitherTComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
-
-      bookOpt mustBe defined
-    }
-
     "InMemoryBookRepository: added book can be listed" in {
       val repository = new InMemoryBookRepository
       val bookList = for {
         _     <- repository.addBook(book)
         books <- repository.listBooks()
       } yield books
-
-      bookList.size mustBe 1
-    }
-
-    "StateBookRepository: added book can be listed" in {
-      val repository = new StateBookRepository
-      val eitherTComputation = for {
-        _     <- repository.addBook(book)
-        books <- repository.listBooks()
-      } yield books
-
-      val (_, Right(bookList)) = eitherTComputation.value.run(Map.empty[BookId, Book] -> Map.empty[UserId, User]).value
 
       bookList.size mustBe 1
     }

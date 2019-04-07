@@ -1,7 +1,7 @@
 package reading
 
-import cats.Monad
 import cats.implicits._
+import cats.temp.par._
 import reading.domain._
 
 import scala.language.higherKinds
@@ -23,7 +23,7 @@ object interpreters {
             user.books.traverse(books.getBook).map { books =>
               ReadingList(user, books.flatten)
             }
-          case None => Throwing[F].raiseError(NoSuchUserException(userId))
+          case None => Throwing[F].raiseError[ReadingList](NoSuchUserException(userId))
         }
       } yield list
     }
