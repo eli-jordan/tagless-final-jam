@@ -1,5 +1,8 @@
 package reading
 
+import io.circe.generic.extras.semiauto._
+import io.circe.{Decoder, Encoder}
+
 import scala.language.higherKinds
 
 /**
@@ -18,6 +21,10 @@ object domain {
     * ReadingList - represents the combination of a user and the book details
     */
   final case class UserId(id: String) extends AnyVal
+  object UserId {
+    implicit val circeEncoder: Encoder[UserId] = deriveUnwrappedEncoder
+    implicit val circeDecoder: Decoder[UserId] = deriveUnwrappedDecoder
+  }
   final case class User(
       id: Option[UserId], // the unique id of a user
       firstName: String, // the users first name
@@ -26,6 +33,11 @@ object domain {
   )
 
   final case class BookId(id: String) extends AnyVal
+  object BookId {
+    implicit val circeEncoder: Encoder[BookId] = deriveUnwrappedEncoder
+    implicit val circeDecoder: Decoder[BookId] = deriveUnwrappedDecoder
+  }
+
   final case class Book(
       id: Option[BookId], // the unique id of the book
       title: String, // the books title
